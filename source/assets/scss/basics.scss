@@ -1,0 +1,13 @@
+@import "variables";
+.test {
+	font-size: 15px;
+
+	&__world {
+		font-weight: bold;
+	}
+
+  &--eh {
+    color: $primary-color;
+    background-color: black;
+  }
+}
