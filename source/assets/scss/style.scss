@@ -1,0 +1,12 @@
+.test {
+	font-size: 15px;
+
+	&__world {
+		font-weight: bold;
+	}
+
+  &--eh {
+    color: red;
+    background-color: black;
+  }
+}
