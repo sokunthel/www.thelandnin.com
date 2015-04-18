@@ -2,6 +2,7 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
 
+    nunjucksRender = require('gulp-nunjucks-render'),
     jshint = require('gulp-jshint'),
     sass = require('gulp-sass'),
     concat = require('gulp-concat'),
@@ -12,9 +13,10 @@ var gulp = require('gulp'),
     minifyHTML = require('gulp-minify-html'),
     livereload = require('gulp-livereload'),
     autoprefixer = require('gulp-autoprefixer'),
+    plumber = require('gulp-plumber'),
 
     input = {
-        'html': 'source/templates/pages/*.html',
+        'html': 'source/*.html',
         'css': 'source/assets/scss/*.scss',
         'js': 'source/assets/js/*.js',
         'vendorjs': 'public/assets/js/vendor/*.js'
@@ -26,19 +28,16 @@ var gulp = require('gulp'),
         'js': 'public/assets/js'
     };
 
-gulp.task('jshint', function() {
-    return gulp.src(input.js)
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'));
-});
-
 gulp.task('build-html', function(){
     var opts = {
         conditionals: true,
         spare: true,
         empty: true
     }
+    nunjucksRender.nunjucks.configure(['source/']);
     return gulp.src(input.html)
+        .pipe(plumber())
+        .pipe(nunjucksRender())
         .pipe(minifyHTML(opts))
         .pipe(gulp.dest(output.html))
         .pipe(livereload());
@@ -46,6 +45,7 @@ gulp.task('build-html', function(){
 
 gulp.task('build-css', function() {
     return gulp.src(input.css)
+        .pipe(plumber())
         .pipe(sass({ errLogToConsole: true }))
         .pipe(autoprefixer({ cascade: true }))
         .pipe(concat('app.css'))
@@ -58,8 +58,16 @@ gulp.task('build-css', function() {
         .pipe(livereload());
 });
 
+gulp.task('jshint', function() {
+    return gulp.src(input.js)
+        .pipe(plumber())
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+});
+
 gulp.task('build-js', function() {
     return gulp.src(input.js)
+        .pipe(plumber())
         .pipe(concat('app.js'))
         .pipe(gulp.dest(output.js))
         .pipe(sourcemaps.init())

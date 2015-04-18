@@ -1,0 +1,17 @@
+{% extends "layouts/main.html" %}
+
+{% block body %}
+	<h1>Welcome to ThelAndNin.com!</h1>
+{% endblock %}
+
+{% block page_specific_script %}
+	<script type="text/javascript">
+		//Home Page BG Slideshow
+		//----------------------------------
+		$.backstretch([
+			"http://placehold.it/1600x750"
+			, "http://placehold.it/1600x750"
+			, "http://placehold.it/1600x750"
+		], {duration: 3000, fade: 750});
+	</script>
+{% endblock %}
